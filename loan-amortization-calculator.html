@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payal Motors – Amortization Calculator</title>
+  <style>
+    :root {
+      --primary: #0f4c81;
+      --primary-dark: #0a3558;
+      --primary-light: #1a6bb5;
+      --accent: #e8a317;
+      --accent-dark: #c4890f;
+      --success: #0d9488;
+      --success-dark: #0f766e;
+      --grey-50: #f8fafc;
+      --grey-100: #f1f5f9;
+      --grey-200: #e2e8f0;
+      --grey-300: #cbd5e1;
+      --grey-400: #94a3b8;
+      --grey-500: #64748b;
+      --grey-600: #475569;
+      --grey-700: #334155;
+      --grey-800: #1e293b;
+      --grey-900: #0f172a;
+      --white: #ffffff;
+      --danger: #dc2626;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 10px 25px rgba(15,76,129,0.12);
+      --radius: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(160deg, #e8f0f8 0%, #f0f4f8 40%, #eef2ff 100%);
+      color: var(--grey-900);
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 16px 10px 40px;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    /* ===== HEADER / BRAND ===== */
+    .header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+      color: var(--white);
+      padding: 0;
+      border-radius: var(--radius) var(--radius) 0 0;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(232,163,23,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .header-inner {
+      padding: 20px 28px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(145deg, var(--accent) 0%, var(--accent-dark) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      letter-spacing: -1px;
+    }
+
+    .brand-text h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .brand-text p {
+      font-size: 0.82rem;
+      opacity: 0.85;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .header-badge {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: var(--white);
+      border-radius: 0 0 var(--radius) var(--radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--grey-200);
+      border-top: none;
+      overflow: hidden;
+    }
+
+    .card-body { padding: 26px 28px; }
+
+    /* ===== SECTION LABELS ===== */
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--grey-100);
+    }
+
+    /* ===== FORM ===== */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--grey-600);
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group input[type="tel"],
+    .form-group select {
+      padding: 10px 13px;
+      border: 1.5px solid var(--grey-300);
+      border-radius: 7px;
+      font-size: 0.93rem;
+      color: var(--grey-800);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.12);
+    }
+
+    .input-prefix {
+      position: relative;
+    }
+    .input-prefix .prefix {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--grey-500);
+      font-weight: 600;
+      font-size: 0.93rem;
+      pointer-events: none;
+    }
+    .input-prefix input { padding-left: 28px; }
+
+    .input-suffix {
+      position: relative;
+    }
+    .input-suffix .suffix {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--grey-500);
+      font-weight: 600;
+      font-size: 0.93rem;
+      pointer-events: none;
+    }
+    .input-suffix input { padding-right: 36px; }
+
+    /* Options row */
+    .options-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      background: var(--grey-50);
+      border-radius: 8px;
+      border: 1px solid var(--grey-200);
+    }
+
+    .option-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .option-group > span {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--grey-600);
+    }
+
+    .radio-group, .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .radio-label, .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      color: var(--grey-700);
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .radio-label input, .checkbox-label input {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Extra payment */
+    #extraPaymentSection {
+      display: none;
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+      border-radius: 8px;
+    }
+    #extraPaymentSection.visible { display: block; }
+    #extraPaymentSection .form-grid { margin-bottom: 0; }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .btn {
+      padding: 11px 22px;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.93rem;
+      font-weight: 650;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-calculate {
+      background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
+      color: var(--white);
+      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.3);
+    }
+    .btn-calculate:hover {
+      background: linear-gradient(135deg, var(--success-dark) 0%, #0d5c56 100%);
+    }
+
+    .btn-clear {
+      background: var(--grey-200);
+      color: var(--grey-700);
+    }
+    .btn-clear:hover { background: var(--grey-300); }
+
+    /* Error */
+    .error-msg {
+      display: none;
+      background: #fef2f2;
+      color: var(--danger);
+      border: 1px solid #fecaca;
+      padding: 11px 14px;
+      border-radius: 7px;
+      margin-bottom: 16px;
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+    .error-msg.visible { display: block; }
+
+    /* ===== RESULTS ===== */
+    #resultsSection {
+      display: none;
+      margin-top: 24px;
+      border-top: 2px solid var(--grey-200);
+      padding-top: 22px;
+      position: relative;
+    }
+    #resultsSection.visible { display: block; }
+
+    /* Agent watermark */
+    .agent-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-28deg);
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 800;
+      color: rgba(15, 76, 129, 0.06);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 0;
+      letter-spacing: 0.08em;
+      user-select: none;
+      max-width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .results-inner { position: relative; z-index: 1; }
+
+    .customer-info-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 18px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
+      border-radius: 8px;
+      border: 1px solid #bfdbfe;
+      font-size: 0.88rem;
+    }
+    .customer-info-bar .info-item {
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+    }
+    .customer-info-bar .info-label {
+      font-weight: 600;
+      color: var(--grey-500);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .customer-info-bar .info-value {
+      font-weight: 650;
+      color: var(--primary-dark);
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 14px;
+    }
+
+    /* Summary cards */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .summary-card {
+      background: var(--white);
+      border: 1.5px solid var(--grey-200);
+      border-radius: 9px;
+      padding: 14px 12px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .summary-card:hover {
+      border-color: var(--primary-light);
+      transform: translateY(-1px);
+    }
+    .summary-card .label {
+      font-size: 0.72rem;
+      font-weight: 650;
+      color: var(--grey-500);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 5px;
+    }
+    .summary-card .value {
+      font-size: 1.08rem;
+      font-weight: 750;
+      color: var(--primary-dark);
+    }
+    .summary-card.highlight {
+      background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
+      border-color: #93c5fd;
+    }
+    .summary-card.highlight .value { color: var(--primary); }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--grey-200);
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 9px 18px;
+      border: none;
+      background: transparent;
+      font-size: 0.9rem;
+      font-weight: 650;
+      color: var(--grey-500);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--primary); }
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Tables */
+    .table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--grey-200);
+      border-radius: 9px;
+      box-shadow: var(--shadow);
+      background: var(--white);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      min-width: 680px;
+    }
+    thead {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      color: var(--white);
+    }
+    thead th {
+      padding: 11px 12px;
+      text-align: right;
+      font-weight: 650;
+      white-space: nowrap;
+      font-size: 0.76rem;
+      letter-spacing: 0.02em;
+    }
+    thead th:first-child { text-align: center; }
+    tbody tr {
+      border-bottom: 1px solid var(--grey-200);
+      transition: background 0.12s;
+    }
+    tbody tr:nth-child(even) { background: var(--grey-50); }
+    tbody tr:hover { background: #eff6ff; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td {
+      padding: 9px 12px;
+      text-align: right;
+      white-space: nowrap;
+      color: var(--grey-700);
+    }
+    tbody td:first-child {
+      text-align: center;
+      font-weight: 650;
+      color: var(--primary-dark);
+    }
+    tbody tr.zero-balance td {
+      font-weight: 650;
+      color: var(--success);
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      font-size: 0.76rem;
+      color: var(--grey-500);
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      body { padding: 8px 6px 30px; }
+      .header-inner { padding: 16px 16px 14px; }
+      .brand-logo { width: 44px; height: 44px; font-size: 1.25rem; }
+      .brand-text h1 { font-size: 1.3rem; }
+      .card-body { padding: 16px 14px; }
+      .options-row { flex-direction: column; gap: 14px; }
+      .summary-cards { grid-template-columns: repeat(2, 1fr); }
+      .summary-card .value { font-size: 0.95rem; }
+      .btn { flex: 1; justify-content: center; }
+      .customer-info-bar { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-inner">
+        <div class="brand">
+          <div class="brand-logo">PM</div>
+          <div class="brand-text">
+            <h1>Payal Motors</h1>
+            <p>Loan Amortization Calculator</p>
+          </div>
+        </div>
+        <div class="header-badge">Financial Tools</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+
+        <!-- CUSTOMER & AGENT INFO -->
+        <div class="section-label">Customer &amp; Agent Details</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="customerName">Customer Name</label>
+            <input type="text" id="customerName" placeholder="Enter customer name" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="customerContact">Contact Number</label>
+            <input type="tel" id="customerContact" placeholder="e.g. 98765 43210" autocomplete="tel">
+          </div>
+          <div class="form-group">
+            <label for="agentName">Agent Name</label>
+            <input type="text" id="agentName" placeholder="Enter agent name" autocomplete="off">
+          </div>
+        </div>
+
+        <!-- LOAN INPUTS -->
+        <div class="section-label">Loan Details</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="loanAmount">Loan Amount</label>
+            <div class="input-prefix">
+              <span class="prefix">₹</span>
+              <input type="number" id="loanAmount" placeholder="200000" min="1" step="any" value="200000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="loanTerm">Loan Term (Years)</label>
+            <input type="number" id="loanTerm" placeholder="15" min="1" step="1" value="15">
+          </div>
+          <div class="form-group">
+            <label for="interestRate">Interest Rate</label>
+            <div class="input-suffix">
+              <input type="number" id="interestRate" placeholder="6" min="0" step="0.01" value="6">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- OPTIONS -->
+        <div class="options-row">
+          <div class="option-group">
+            <span>Interest Method</span>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="interestMethod" value="reducing" checked>
+                Reducing Balance
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="interestMethod" value="flat">
+                Flat Interest
+              </label>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <span>EMI Frequency</span>
+            <select id="emiFrequency">
+              <option value="monthly">Monthly EMI</option>
+              <option value="halfyearly" selected>Half-Yearly EMI</option>
+              <option value="annual">Annual EMI</option>
+            </select>
+          </div>
+
+          <div class="option-group">
+            <span>&nbsp;</span>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="extraPaymentCheck">
+                Make Extra Payments
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXTRA PAYMENT -->
+        <div id="extraPaymentSection">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="extraAmount">Extra Principal Payment</label>
+              <div class="input-prefix">
+                <span class="prefix">₹</span>
+                <input type="number" id="extraAmount" placeholder="10000" min="0" step="any" value="0">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="extraFrequency">Extra Payment Frequency</label>
+              <select id="extraFrequency">
+                <option value="every">Every Period</option>
+                <option value="yearly">Every 1 Year</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="errorMsg" class="error-msg"></div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-calculate" onclick="calculateLoan()">Calculate ▶</button>
+          <button type="button" class="btn btn-clear" onclick="clearCalculator()">Clear</button>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="resultsSection">
+          <div class="agent-watermark" id="agentWatermark"></div>
+          <div class="results-inner">
+
+            <div class="customer-info-bar" id="customerInfoBar" style="display:none;"></div>
+
+            <h2 class="section-title">Loan Summary</h2>
+            <div class="summary-cards" id="summaryCards"></div>
+
+            <div class="tabs" id="scheduleTabs">
+              <button type="button" class="tab-btn active" data-tab="primary" id="primaryTabBtn" onclick="switchTab('primary')">Schedule</button>
+              <button type="button" class="tab-btn" data-tab="annual" id="annualTabBtn" onclick="switchTab('annual')" style="display:none;">Annual Schedule</button>
+            </div>
+
+            <!-- Primary Schedule (Monthly / Half-Yearly / Annual based on selection) -->
+            <div id="tab-primary" class="tab-content active">
+              <div class="table-wrapper">
+                <table id="primaryTable">
+                  <thead id="primaryHead"></thead>
+                  <tbody id="primaryBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Annual aggregated (only when not already Annual frequency) -->
+            <div id="tab-annual" class="tab-content">
+              <div class="table-wrapper">
+                <table id="annualTable">
+                  <thead>
+                    <tr>
+                      <th>Year</th>
+                      <th>Interest</th>
+                      <th>Principal</th>
+                      <th>Total EMI</th>
+                      <th>Extra Principal</th>
+                      <th>Ending Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="annualBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <p class="footer-note">
+              Payal Motors · All amounts in Indian Rupees (₹) · For illustrative purposes only
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========== Utilities ==========
+    function formatCurrency(amount) {
+      if (amount === null || amount === undefined || isNaN(amount)) return '₹0.00';
+      const absVal = Math.abs(amount);
+      const formatted = absVal.toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return (amount < 0 ? '-₹' : '₹') + formatted;
+    }
+
+    function round2(num) {
+      return Math.round((num + Number.EPSILON) * 100) / 100;
+    }
+
+    // ========== Validation ==========
+    function validateInputs() {
+      const amount = parseFloat(document.getElementById('loanAmount').value);
+      const term = parseFloat(document.getElementById('loanTerm').value);
+      const rate = parseFloat(document.getElementById('interestRate').value);
+      const extraCheck = document.getElementById('extraPaymentCheck').checked;
+      const extraAmount = parseFloat(document.getElementById('extraAmount').value) || 0;
+      const errors = [];
+
+      if (isNaN(amount) || amount <= 0) errors.push('Loan Amount must be greater than 0.');
+      if (isNaN(term) || term <= 0 || !Number.isInteger(term)) errors.push('Loan Term must be a whole number greater than 0 (years only).');
+      if (isNaN(rate) || rate < 0) errors.push('Interest Rate cannot be negative.');
+      if (extraCheck && (isNaN(extraAmount) || extraAmount < 0)) errors.push('Extra Principal Payment cannot be negative.');
+      return errors;
+    }
+
+    // ========== EMI Formula ==========
+    function calculateEMI(principal, periodicRate, numPeriods) {
+      if (periodicRate === 0) return principal / numPeriods;
+      const factor = Math.pow(1 + periodicRate, numPeriods);
+      return principal * periodicRate * factor / (factor - 1);
+    }
+
+    // ========== Reducing Balance ==========
+    function calculateReducingBalance(principal, annualRate, years, periodsPerYear, extraAmount, extraEveryN) {
+      const periodicRate = annualRate / 100 / periodsPerYear;
+      const totalPeriods = years * periodsPerYear;
+      const emi = calculateEMI(principal, periodicRate, totalPeriods);
+
+      const schedule = [];
+      let balance = principal;
+      let totalInterest = 0, totalPrincipal = 0, totalExtra = 0, totalPaid = 0;
+
+      for (let i = 1; i <= totalPeriods; i++) {
+        if (balance <= 0.01) break;
+
+        const opening = balance;
+        let interest = round2(opening * periodicRate);
+        let principalPart = round2(emi - interest);
+        if (principalPart > opening) principalPart = opening;
+        let actualEMI = round2(interest + principalPart);
+
+        let extra = 0;
+        if (extraAmount > 0 && (i % extraEveryN === 0)) {
+          extra = Math.min(extraAmount, Math.max(0, opening - principalPart));
+          extra = round2(extra);
+        }
+
+        let remaining = round2(opening - principalPart - extra);
+        if (remaining < 0.01) remaining = 0;
+
+        schedule.push({
+          period: i,
+          opening, interest, principal: principalPart,
+          emi: actualEMI, extra, remaining
+        });
+
+        totalInterest += interest;
+        totalPrincipal += principalPart;
+        totalExtra += extra;
+        totalPaid += actualEMI + extra;
+        balance = remaining;
+      }
+
+      return {
+        schedule,
+        emi: round2(emi),
+        totalInterest: round2(totalInterest),
+        totalPrincipal: round2(totalPrincipal),
+        totalExtra: round2(totalExtra),
+        totalPaid: round2(totalPaid),
+        periodsPerYear
+      };
+    }
+
+    // ========== Flat Interest ==========
+    function calculateFlatInterest(principal, annualRate, years, periodsPerYear, extraAmount, extraEveryN) {
+      const totalPeriods = years * periodsPerYear;
+      const totalInterest = principal * (annualRate / 100) * years;
+      const interestPerPeriod = totalInterest / totalPeriods;
+      const principalPerPeriod = principal / totalPeriods;
+      const flatEMI = principalPerPeriod + interestPerPeriod;
+
+      const schedule = [];
+      let balance = principal;
+      let totalInterestPaid = 0, totalPrincipalPaid = 0, totalExtra = 0, totalPaid = 0;
+
+      for (let i = 1; i <= totalPeriods; i++) {
+        if (balance <= 0.01) break;
+
+        const opening = balance;
+        let interest = round2(interestPerPeriod);
+        let principalPart = round2(principalPerPeriod);
+        if (principalPart > opening) principalPart = opening;
+        let actualEMI = round2(interest + principalPart);
+
+        let extra = 0;
+        if (extraAmount > 0 && (i % extraEveryN === 0)) {
+          extra = Math.min(extraAmount, Math.max(0, opening - principalPart));
+          extra = round2(extra);
+        }
+
+        let remaining = round2(opening - principalPart - extra);
+        if (remaining < 0.01) remaining = 0;
+
+        schedule.push({
+          period: i,
+          opening, interest, principal: principalPart,
+          emi: actualEMI, extra, remaining
+        });
+
+        totalInterestPaid += interest;
+        totalPrincipalPaid += principalPart;
+        totalExtra += extra;
+        totalPaid += actualEMI + extra;
+        balance = remaining;
+      }
+
+      return {
+        schedule,
+        emi: round2(flatEMI),
+        totalInterest: round2(totalInterestPaid),
+        totalPrincipal: round2(totalPrincipalPaid),
+        totalExtra: round2(totalExtra),
+        totalPaid: round2(totalPaid),
+        periodsPerYear
+      };
+    }
+
+    // ========== Aggregate to Annual ==========
+    function generateAnnualFromSchedule(schedule, periodsPerYear) {
+      const annual = [];
+      const periodsPerYearActual = periodsPerYear;
+
+      for (let i = 0; i < schedule.length; i += periodsPerYearActual) {
+        const yearNum = Math.floor(i / periodsPerYearActual) + 1;
+        const chunk = schedule.slice(i, i + periodsPerYearActual);
+        if (!chunk.length) break;
+
+        let interest = 0, principal = 0, totalEMI = 0, extra = 0;
+        chunk.forEach(r => {
+          interest += r.interest;
+          principal += r.principal;
+          totalEMI += r.emi;
+          extra += r.extra;
+        });
+        const ending = chunk[chunk.length - 1].remaining;
+
+        annual.push({
+          year: yearNum,
+          interest: round2(interest),
+          principal: round2(principal),
+          totalEMI: round2(totalEMI),
+          extra: round2(extra),
+          ending: round2(ending)
+        });
+      }
+      return annual;
+    }
+
+    // ========== Period labels ==========
+    function getPeriodLabel(frequency) {
+      if (frequency === 'monthly') return 'Month';
+      if (frequency === 'halfyearly') return 'Half-Year';
+      return 'Year';
+    }
+
+    function getEMILabel(frequency) {
+      if (frequency === 'monthly') return 'Monthly EMI';
+      if (frequency === 'halfyearly') return 'Half-Yearly EMI';
+      return 'Annual EMI';
+    }
+
+    // ========== Main Calculate ==========
+    function calculateLoan() {
+      const errorEl = document.getElementById('errorMsg');
+      errorEl.classList.remove('visible');
+      errorEl.textContent = '';
+
+      const errors = validateInputs();
+      if (errors.length) {
+        errorEl.textContent = errors.join(' ');
+        errorEl.classList.add('visible');
+        document.getElementById('resultsSection').classList.remove('visible');
+        return;
+      }
+
+      const principal = parseFloat(document.getElementById('loanAmount').value);
+      const years = parseInt(document.getElementById('loanTerm').value, 10);
+      const annualRate = parseFloat(document.getElementById('interestRate').value);
+      const method = document.querySelector('input[name="interestMethod"]:checked').value;
+      const frequency = document.getElementById('emiFrequency').value;
+      const extraCheck = document.getElementById('extraPaymentCheck').checked;
+      const extraAmount = extraCheck ? (parseFloat(document.getElementById('extraAmount').value) || 0) : 0;
+      const extraFreq = document.getElementById('extraFrequency').value;
+
+      // Periods per year
+      let periodsPerYear = 2;
+      if (frequency === 'monthly') periodsPerYear = 12;
+      else if (frequency === 'annual') periodsPerYear = 1;
+
+      // Extra every N periods
+      let extraEveryN = 1;
+      if (extraFreq === 'yearly') {
+        extraEveryN = periodsPerYear; // once per year
+      }
+
+      let result;
+      if (method === 'reducing') {
+        result = calculateReducingBalance(principal, annualRate, years, periodsPerYear, extraAmount, extraEveryN);
+      } else {
+        result = calculateFlatInterest(principal, annualRate, years, periodsPerYear, extraAmount, extraEveryN);
+      }
+
+      // Agent watermark
+      const agentName = (document.getElementById('agentName').value || '').trim();
+      const wm = document.getElementById('agentWatermark');
+      wm.textContent = agentName || '';
+
+      // Customer info bar
+      const custName = (document.getElementById('customerName').value || '').trim();
+      const custContact = (document.getElementById('customerContact').value || '').trim();
+      const infoBar = document.getElementById('customerInfoBar');
+      if (custName || custContact || agentName) {
+        let html = '';
+        if (custName) html += `<div class="info-item"><span class="info-label">Customer</span><span class="info-value">${escapeHtml(custName)}</span></div>`;
+        if (custContact) html += `<div class="info-item"><span class="info-label">Contact</span><span class="info-value">${escapeHtml(custContact)}</span></div>`;
+        if (agentName) html += `<div class="info-item"><span class="info-label">Agent</span><span class="info-value">${escapeHtml(agentName)}</span></div>`;
+        infoBar.innerHTML = html;
+        infoBar.style.display = 'flex';
+      } else {
+        infoBar.style.display = 'none';
+      }
+
+      // Summary
+      renderSummary(result, getEMILabel(frequency));
+
+      // Primary table
+      const periodLabel = getPeriodLabel(frequency);
+      document.getElementById('primaryTabBtn').textContent = periodLabel + ' Schedule';
+      renderPrimaryTable(result.schedule, periodLabel);
+
+      // Annual tab: show only if frequency is not already annual
+      const annualTabBtn = document.getElementById('annualTabBtn');
+      if (frequency !== 'annual') {
+        annualTabBtn.style.display = '';
+        const annualRows = generateAnnualFromSchedule(result.schedule, periodsPerYear);
+        renderAnnualTable(annualRows);
+      } else {
+        annualTabBtn.style.display = 'none';
+      }
+
+      document.getElementById('resultsSection').classList.add('visible');
+      switchTab('primary');
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ========== Render ==========
+    function renderSummary(result, emiLabel) {
+      document.getElementById('summaryCards').innerHTML = `
+        <div class="summary-card highlight">
+          <div class="label">${emiLabel}</div>
+          <div class="value">${formatCurrency(result.emi)}</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Total Principal</div>
+          <div class="value">${formatCurrency(result.totalPrincipal)}</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Total Interest</div>
+          <div class="value">${formatCurrency(result.totalInterest)}</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Extra Payment</div>
+          <div class="value">${formatCurrency(result.totalExtra)}</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Total Amount Paid</div>
+          <div class="value">${formatCurrency(result.totalPaid)}</div>
+        </div>
+      `;
+    }
+
+    function renderPrimaryTable(schedule, periodLabel) {
+      const head = document.getElementById('primaryHead');
+      head.innerHTML = `
+        <tr>
+          <th>${periodLabel}</th>
+          <th>Opening Balance</th>
+          <th>Interest</th>
+          <th>Principal</th>
+          <th>EMI</th>
+          <th>Extra Principal</th>
+          <th>Remaining Balance</th>
+        </tr>
+      `;
+
+      const tbody = document.getElementById('primaryBody');
+      tbody.innerHTML = '';
+      schedule.forEach(row => {
+        const tr = document.createElement('tr');
+        if (row.remaining === 0) tr.classList.add('zero-balance');
+        tr.innerHTML = `
+          <td>${row.period}</td>
+          <td>${formatCurrency(row.opening)}</td>
+          <td>${formatCurrency(row.interest)}</td>
+          <td>${formatCurrency(row.principal)}</td>
+          <td>${formatCurrency(row.emi)}</td>
+          <td>${formatCurrency(row.extra)}</td>
+          <td>${formatCurrency(row.remaining)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderAnnualTable(rows) {
+      const tbody = document.getElementById('annualBody');
+      tbody.innerHTML = '';
+      rows.forEach(row => {
+        const tr = document.createElement('tr');
+        if (row.ending === 0) tr.classList.add('zero-balance');
+        tr.innerHTML = `
+          <td>${row.year}</td>
+          <td>${formatCurrency(row.interest)}</td>
+          <td>${formatCurrency(row.principal)}</td>
+          <td>${formatCurrency(row.totalEMI)}</td>
+          <td>${formatCurrency(row.extra)}</td>
+          <td>${formatCurrency(row.ending)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+      });
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.toggle('active', content.id === 'tab-' + tabName);
+      });
+    }
+
+    function clearCalculator() {
+      document.getElementById('customerName').value = '';
+      document.getElementById('customerContact').value = '';
+      document.getElementById('agentName').value = '';
+      document.getElementById('loanAmount').value = '200000';
+      document.getElementById('loanTerm').value = '15';
+      document.getElementById('interestRate').value = '6';
+      document.querySelector('input[name="interestMethod"][value="reducing"]').checked = true;
+      document.getElementById('emiFrequency').value = 'halfyearly';
+      document.getElementById('extraPaymentCheck').checked = false;
+      document.getElementById('extraAmount').value = '0';
+      document.getElementById('extraFrequency').value = 'every';
+      document.getElementById('extraPaymentSection').classList.remove('visible');
+      document.getElementById('errorMsg').classList.remove('visible');
+      document.getElementById('errorMsg').textContent = '';
+      document.getElementById('resultsSection').classList.remove('visible');
+      document.getElementById('primaryBody').innerHTML = '';
+      document.getElementById('annualBody').innerHTML = '';
+      document.getElementById('summaryCards').innerHTML = '';
+      document.getElementById('agentWatermark').textContent = '';
+      document.getElementById('customerInfoBar').style.display = 'none';
+    }
+
+    // Events
+    document.getElementById('extraPaymentCheck').addEventListener('change', function () {
+      document.getElementById('extraPaymentSection').classList.toggle('visible', this.checked);
+    });
+
+    document.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          calculateLoan();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
