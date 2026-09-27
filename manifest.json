@@ -2,7 +2,7 @@
   "name": "Payal Motors – Loan Amortization Calculator",
   "short_name": "Payal Motors",
   "description": "Professional loan amortization calculator with Monthly, Half-Yearly and Annual EMI schedules.",
-  "start_url": "./index.html",
+  "start_url": "./loan-amortization-calculator.html",
   "display": "standalone",
   "background_color": "#0f4c81",
   "theme_color": "#0f4c81",
